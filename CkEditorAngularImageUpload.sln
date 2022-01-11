@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{54BD678A-77B1-4BE6-B691-E69C7B9406FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CkEditorAngularImageUpload.Api", "src\CkEditorAngularImageUpload.Api\CkEditorAngularImageUpload.Api.csproj", "{2BCF0880-C759-4D46-825B-B3EAF9AB3169}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2BCF0880-C759-4D46-825B-B3EAF9AB3169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BCF0880-C759-4D46-825B-B3EAF9AB3169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BCF0880-C759-4D46-825B-B3EAF9AB3169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BCF0880-C759-4D46-825B-B3EAF9AB3169}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2BCF0880-C759-4D46-825B-B3EAF9AB3169} = {54BD678A-77B1-4BE6-B691-E69C7B9406FD}
+	EndGlobalSection
+EndGlobal
