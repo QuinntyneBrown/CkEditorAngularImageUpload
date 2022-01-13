@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.IO;
 
 namespace CkEditorAngularImageUpload.Api
 {
@@ -48,6 +50,13 @@ namespace CkEditorAngularImageUpload.Api
             app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                       Path.Combine(env.ContentRootPath, "Uploads")),
+                RequestPath = "/Uploads"
+            });
 
             app.UseRouting();
 

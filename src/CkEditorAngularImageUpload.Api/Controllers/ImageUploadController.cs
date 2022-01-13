@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace CkEditorAngularImageUpload.Api.Controllers
 {
@@ -10,33 +12,39 @@ namespace CkEditorAngularImageUpload.Api.Controllers
     public class ImageUploadController
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public ImageUploadController(IHttpContextAccessor httpContextAccessor)
+        private readonly IConfiguration _configuration;
+        public ImageUploadController(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
         }
 
-        [HttpPost]
-        public ActionResult Post()
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<ActionResult> Post()
         {
+            string currentDirectory = Directory.GetCurrentDirectory();
+
             HttpContext httpContext = _httpContextAccessor.HttpContext;
 
-            IFormFile file = httpContext.Request.Form.Files[0];
+            IFormFile formFile = httpContext.Request.Form.Files[0];
 
-            using (var memoryStream = new MemoryStream())
+            string fileExtension = Path.GetExtension(formFile.FileName);
+
+            var filename = $"{ Guid.NewGuid()}{fileExtension}";
+
+            var filePath = Path.Combine(currentDirectory,"Uploads", filename);
+
+            using (var stream = System.IO.File.Create(filePath))
             {
-                file.CopyTo(memoryStream);
-                var fileBytes = memoryStream.ToArray();
-                string base64String = Convert.ToBase64String(fileBytes);
-
-                return new OkObjectResult(new
-                {
-                    Url = $"data:image/jpeg;base64,{base64String}",
-                    Uploaded = 1,
-                    File = file.Name
-                });
-
+                await formFile.CopyToAsync(stream);
             }
+
+            return new OkObjectResult(new
+            {
+                Url = $"https://localhost:5001/uploads/{filename}",
+                Uploaded = 1,
+                File = filename
+            });
         }
     }
 }
