@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { CKEditor4 } from 'ckeditor4-angular';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { EMPTY, map, startWith, Subject, switchMap, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -8,15 +9,47 @@ import { CKEditor4 } from 'ckeditor4-angular';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  readonly config =  {
-    removeDialogTabs :'image:advanced;image:Link;link:advanced;link:upload',
-    filebrowserImageUploadUrl: `https://localhost:5001/api/imageUpload?command=upload`,
-    extraPlugins: 'colorbutton,colordialog'
-  };
 
-  readonly formControl: FormControl = new FormControl(null,[]);
+  private readonly _changeSubject: Subject<any> = new Subject();
 
-  onReady($event : CKEditor4.EventInfo, formControl: FormControl) {
-    $event.editor.on("afterInsertHtml", () => formControl.patchValue($event.editor.getData()));
+  private readonly _change$ = this._changeSubject.asObservable();
+
+  @ViewChild("input", { static: false }) public fileInput: ElementRef<HTMLInputElement>;
+  
+  readonly vm$ = this._change$
+  .pipe(
+    switchMap($event => this._handleChange($event).pipe(
+      tap(response => this.formControl.setValue(`<img src="${response.url}">`)),
+    )),
+    startWith(null),
+    map(response => {
+      return {
+        response
+      }
+    })
+  )
+
+  constructor(
+    private readonly _client: HttpClient
+  ) { }
+
+  readonly formControl = new FormControl(null,[Validators.required]);
+
+  private _handleChange(files) {
+    if (files.length > 0) {
+      const file = files[0];      
+      const formData = new FormData();       
+      formData.append("file", file, file.name);    
+      return this._client.post<{ url: string }>('https://localhost:5001/api/imageUpload', formData)
+    }
+
+    return EMPTY;
   }
+
+  onChange($event) {  
+    this._changeSubject.next($event);
+  }
+
+  public handleChooseAFileClick() { this.fileInput.nativeElement.click(); }
+  
 }

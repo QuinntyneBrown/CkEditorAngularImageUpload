@@ -1,5 +1,9 @@
-<ckeditor [formControl]="formControl" [config]="config" (onReady)="onReady($event, formControl)"></ckeditor>
+<ng-container *ngIf="vm$ | async as vm">
 
-<div>
-  {{ formControl.value }}
-</div>
+  <div [innerHtml]="formControl.value"></div>
+
+  <input #input accept="image/*" type="file" (change)="onChange($event.target.files)" style="opacity: 0;">
+
+  <a (click)="handleChooseAFileClick()">Click here to upload File</a>
+
+</ng-container>
