@@ -13,6 +13,7 @@ namespace CkEditorAngularImageUpload.Api.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
+
         public ImageUploadController(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -41,7 +42,7 @@ namespace CkEditorAngularImageUpload.Api.Controllers
 
             return new OkObjectResult(new
             {
-                Url = $"https://localhost:5001/uploads/{filename}",
+                Url = $"{_configuration["ApplicationUrl"]}/uploads/{filename}",
                 Uploaded = 1,
                 File = filename
             });

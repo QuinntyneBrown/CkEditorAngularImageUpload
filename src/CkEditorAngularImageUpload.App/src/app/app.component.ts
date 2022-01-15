@@ -10,7 +10,8 @@ import { CKEditor4 } from 'ckeditor4-angular';
 export class AppComponent {
   readonly config =  {
     removeDialogTabs :'image:advanced;image:Link;link:advanced;link:upload',
-    filebrowserImageUploadUrl: `https://localhost:5001/api/imageUpload?command=upload`
+    filebrowserImageUploadUrl: `https://localhost:5001/api/imageUpload?command=upload`,
+    extraPlugins: 'colorbutton,colordialog'
   };
 
   readonly formControl: FormControl = new FormControl(null,[]);
